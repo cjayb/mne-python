@@ -93,6 +93,11 @@ Changelog
 
    - Add automated ECG detection using cross-trial phase statistics by `Denis Engemann`_ and `Juergen Dammers`_
 
+   - Add Forward class to succintly display gain matrix info by 'Andrew Dykstra'_
+
+   - Add reading and writing of split raw files by `Martin Luessi`_
+
+
 BUG
 ~~~
 
