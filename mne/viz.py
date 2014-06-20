@@ -1322,6 +1322,9 @@ def _plot_evoked(evoked, picks, exclude, unit, show,
             if plot_type == 'butterfly':
                 ax.plot(times, D.T)
             elif plot_type == 'image':
+                if t == 'grad':
+                    from mne.layouts.layout import _merge_grad_data
+                    D = _merge_grad_data(D)
                 im = ax.imshow(D, interpolation='nearest', origin='lower',
                                extent=[times[0], times[-1], 0, D.shape[0]],
                                aspect='auto')
