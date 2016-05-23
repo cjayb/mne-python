@@ -276,7 +276,7 @@ class _BaseRaw(ProjMixin, ContainsMixin, UpdateChannelsMixin,
             assert len(first_samps) == 1
             last_samps = [first_samps[0] + self._data.shape[1] - 1]
             load_from_disk = False
-        else:
+        else:  # preload is either a boolean/None or a path (str) to memmap
             if last_samps is None:
                 raise ValueError('last_samps must be given unless preload is '
                                  'an ndarray')
@@ -285,7 +285,7 @@ class _BaseRaw(ProjMixin, ContainsMixin, UpdateChannelsMixin,
                 load_from_disk = False
             elif preload is not True and not isinstance(preload, string_types):
                 raise ValueError('bad preload: %s' % preload)
-            else:
+            else:  # preload is a string_types, i.e., we're memmapping
                 load_from_disk = True
         self._last_samps = np.array(last_samps)
         self._first_samps = np.array(first_samps)
@@ -480,13 +480,15 @@ class _BaseRaw(ProjMixin, ContainsMixin, UpdateChannelsMixin,
         return self[picks, start:stop][0]
 
     @verbose
-    def load_data(self, verbose=None):
+    def load_data(self, data_buffer=None):
         """Load raw data
 
         Parameters
         ----------
-        verbose : bool, str, int, or None
-            If not None, override default verbose level (see mne.verbose).
+        data_buffer : None or str
+            If None (default), a new numpy array is allocated in memory for
+            the data. If str, a numpy memmap with the correct data type will
+            be used to store the data.
 
         Returns
         -------
@@ -501,7 +503,7 @@ class _BaseRaw(ProjMixin, ContainsMixin, UpdateChannelsMixin,
         .. versionadded:: 0.10.0
         """
         if not self.preload:
-            self._preload_data(True)
+            self._preload_data(data_buffer)
         return self
 
     @verbose
